@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#6f8291" />
+  <meta name="description" content="SIZA Calendar Religiously - Hijri ↔ Gregorian Shia Calendar with event lookup and moon-sighting corrections." />
+  <title>Calendar Religiously</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <style>
+    :root{
+      --bg:#f4f7fa; --card:#ffffff; --ink:#31424f; --muted:#708392; --line:#d9e2ea;
+      --brand:#6f8291; --brand2:#aebdca;
+      --wiladat:#eefbf4; --wiladat-ink:#1f6b49;
+      --aza:#fdf0f4; --aza-ink:#8b2f4d;
+      --major:#fff8e8; --major-ink:#8b6a16;
+      --shahadat:#475866; --shahadat-ink:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f5f8fb,#edf3f8,#f7fafc);color:var(--ink)}
+    .wrap{max-width:1180px;margin:0 auto;padding:16px}
+    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px rgba(68,91,110,.08)}
+    .hero{padding:20px;margin-bottom:16px}
+    .grid{display:grid;gap:16px} .hero-grid{grid-template-columns:1.6fr 1fr} .stats{grid-template-columns:repeat(3,1fr)}
+    .stat,.notice,.small,.event-chip{border-radius:18px} .stat{padding:14px;background:#f7fafc}
+    .small{padding:10px 12px;background:#f7fafc} .card{padding:18px} .section-title{font-size:1.1rem;font-weight:700;margin:0 0 10px}
+    h1{margin:0;font-size:clamp(1.7rem,2.6vw,2.6rem)} p{margin:.35rem 0} .muted{color:var(--muted)} .row{display:flex;gap:10px;flex-wrap:wrap}
+    .tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
+    .tab{padding:12px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
+    .tab.active{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:var(--brand)}
+    .pane{display:none} .pane.active{display:block}
+    label{display:block;font-size:.92rem;font-weight:600;margin:0 0 6px}
+    input,select,button{font:inherit}
+    input,select{width:100%;padding:12px 14px;border:1px solid #c8d4de;border-radius:16px;background:#fff;color:var(--ink)}
+    button{padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+    button.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:var(--brand)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:16px} .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .result{padding:16px;border-radius:20px;background:#f7fafc}
+    .result .big{font-weight:800;font-size:1.6rem}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.75rem;font-weight:700;border:1px solid transparent}
+    .wiladat{background:var(--wiladat);color:var(--wiladat-ink);border-color:#bce8cb}
+    .shahadat{background:var(--shahadat);color:var(--shahadat-ink);border-color:var(--shahadat)}
+    .aza{background:var(--aza);color:var(--aza-ink);border-color:#f5c5d1}
+    .major{background:var(--major);color:var(--major-ink);border-color:#f4df9e}
+    .events-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-height:780px;overflow:auto;padding-right:4px}
+    .event-card{padding:14px;border-radius:18px;border:1px solid var(--line);background:#fff}
+    .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .calendar{overflow:hidden;border:1px solid var(--line);border-radius:24px;background:#fff}
+    .weekday,.cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .weekday:last-child,.cell:nth-child(7n){border-right:none}
+    .weekdays,.cells{display:grid;grid-template-columns:repeat(7,1fr)}
+    .weekday{padding:12px;text-align:center;font-size:.75rem;font-weight:800;text-transform:uppercase;background:#f7fafc;color:var(--muted)}
+    .cell{min-height:110px;padding:10px}
+    .cell-top{display:flex;justify-content:space-between;gap:8px} .gday{font-weight:800} .hday{font-size:.72rem;color:var(--muted)}
+    .event-chip{font-size:.64rem;padding:4px 6px;margin-top:6px;border:1px solid transparent;display:block}
+    .footer-note{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .notice{padding:12px 14px;background:#edf7ff;border:1px solid #c5dff0;color:#36556c;margin:10px 0}
+    .brand-box{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand-logo-wrap{display:flex;align-items:center;gap:14px}
+    .brand-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#eef3f7,#dfe8ef);display:grid;place-items:center;overflow:hidden;border:1px solid var(--line)}
+    .brand-logo img{width:88%;height:88%;object-fit:contain}
+    .search{position:relative} .search input{padding-left:38px} .search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8}
+    .navrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+    .saved-item{padding:14px;border:1px solid var(--line);border-radius:18px}
+    @media (max-width:900px){
+      .hero-grid,.two,.events-grid,.footer-note{grid-template-columns:1fr}
+      .stats,.controls,.three{grid-template-columns:1fr}
+      .tabs{grid-template-columns:1fr 1fr}
+      .cell{min-height:88px;padding:8px}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="grid hero-grid">
+      <div>
+        <div class="brand-box">
+          <div class="brand-logo-wrap">
+            <div class="brand-logo"><img src="icons/logo.png" alt="SIZA logo"></div>
+            <div>
+              <h1>SIZA</h1>
+              <p class="muted">Calendar Religiously</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid stats" style="margin-top:14px">
+          <div class="stat"><div class="muted" style="font-size:.82rem">Current Hijri Year</div><div id="statYear" style="font-size:1.2rem;font-weight:800"></div></div>
+          <div class="stat"><div class="muted" style="font-size:.82rem">Ashura</div><div id="statAshura" style="font-size:1.05rem;font-weight:800"></div></div>
+          <div class="stat"><div class="muted" style="font-size:.82rem">Eid al-Ghadir</div><div id="statGhadir" style="font-size:1.05rem;font-weight:800"></div></div>
+        </div>
+      </div>
+      <div class="card" style="padding:16px">
+        <div class="section-title">About</div>
+        <p class="muted">A mobile-friendly Hijri ↔ Gregorian Shia calendar with event lookup, month browsers, and moon-sighting correction controls.</p>
+        <div class="small" style="margin-top:10px"><b>Brand:</b> SIZA</div>
+        <div class="small" style="margin-top:10px"><b>Home screen title:</b> Calendar Religiously</div>
+        <div class="row" style="margin-top:12px">
+          <button id="copyLink">Copy share link</button>
+          <button id="exportJson">Export settings</button>
+          <label class="small" style="cursor:pointer">Import settings<input id="importJson" type="file" accept="application/json" hidden></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notice" class="notice" style="display:none"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="convert">Convert</button>
+    <button class="tab" data-tab="events">Events</button>
+    <button class="tab" data-tab="gregorian">Gregorian View</button>
+    <button class="tab" data-tab="hijri">Hijri View</button>
+    <button class="tab" data-tab="adjust">Adjust Future Dates</button>
+  </div>
+
+  <div class="pane active" id="pane-convert">
+    <div class="two">
+      <div class="card">
+        <div class="section-title">Gregorian → Hijri</div>
+        <label>Gregorian date</label>
+        <input type="date" id="gInput">
+        <div class="result" style="margin-top:12px">
+          <div class="muted" style="font-size:.82rem">Converted Hijri Date</div>
+          <div class="big" id="gToHPrimary"></div>
+          <div id="gToHSecondary"></div>
+          <div class="muted" id="gToHHelper" style="margin-top:6px"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Hijri → Gregorian</div>
+        <div class="three">
+          <div><label>Hijri day</label><input type="number" min="1" max="30" id="hDay" value="1"></div>
+          <div><label>Hijri month</label><select id="hMonth"></select></div>
+          <div><label>Hijri year</label><input type="number" id="hYear" value="1447"></div>
+        </div>
+        <div class="result" style="margin-top:12px">
+          <div class="muted" style="font-size:.82rem">Converted Gregorian Date</div>
+          <div class="big" id="hToGPrimary"></div>
+          <div id="hToGSecondary"></div>
+          <div class="muted" id="hToGHelper" style="margin-top:6px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-events">
+    <div class="two">
+      <div class="card">
+        <div class="section-title">Event Finder</div>
+        <label>Search events</label>
+        <div class="search"><span class="icon">🔎</span><input id="eventSearch" placeholder="Search by name, type, or Hijri month"></div>
+        <div style="margin-top:12px">
+          <label>Select Shia event</label>
+          <select id="eventSelect"></select>
+        </div>
+        <div id="eventDetail" class="result" style="margin-top:12px"></div>
+      </div>
+      <div class="card">
+        <div class="section-title">All Key Events for <span id="eventYearLabel"></span> AH</div>
+        <div class="events-grid" id="eventsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-gregorian">
+    <div class="card">
+      <div class="navrow">
+        <button id="prevG">← Previous</button>
+        <div style="font-weight:800" id="gBrowseLabel"></div>
+        <button id="nextG">Next →</button>
+      </div>
+      <div class="controls" style="margin-bottom:12px">
+        <div><label>Gregorian month</label><select id="browseGMonth"></select></div>
+        <div><label>Gregorian year</label><input type="number" min="1976" max="2076" id="browseGYear"></div>
+        <div><label>Quick year</label><input type="range" min="1976" max="2076" id="browseGSlider"></div>
+      </div>
+      <div class="calendar">
+        <div class="weekdays" id="weekdaysG"></div>
+        <div class="cells" id="gCalendar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-hijri">
+    <div class="card">
+      <div class="navrow">
+        <button id="prevH">← Previous</button>
+        <div style="font-weight:800" id="hBrowseLabel"></div>
+        <button id="nextH">Next →</button>
+      </div>
+      <div class="controls" style="margin-bottom:12px">
+        <div><label>Hijri month</label><select id="browseHMonth"></select></div>
+        <div><label>Hijri year</label><input type="number" id="browseHYear"></div>
+        <div><label>Quick year</label><input type="range" min="1396" max="1496" id="browseHSlider"></div>
+      </div>
+      <div class="calendar">
+        <div class="weekdays" id="weekdaysH"></div>
+        <div class="cells" id="hCalendar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-adjust">
+    <div class="two">
+      <div class="card">
+        <div class="section-title">Future Correction Control</div>
+        <p class="muted">Set the Gregorian date for the 1st day of a Hijri month. The app adjusts that month and all future dates from there onward.</p>
+        <div class="controls">
+          <div><label>Hijri month</label><select id="ovMonth"></select></div>
+          <div><label>Hijri year</label><input type="number" id="ovYear" value="1447"></div>
+          <div><label>Gregorian date for day 1</label><input type="date" id="ovDate" value="2026-03-22"></div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="primary" id="saveOverride">Save correction</button>
+          <button id="clearOverrides">Clear all</button>
+        </div>
+        <div class="small" style="margin-top:12px">Example: if 1 Shawwal 1447 AH is confirmed as 22 March 2026, set <b>Shawwal 1447</b> to <b>2026-03-22</b>.</div>
+      </div>
+      <div class="card">
+        <div class="section-title">Saved Corrections</div>
+        <div id="savedOverrides"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note" style="margin-top:16px">
+    <div class="card">
+      <div class="section-title">Engine</div>
+      <p class="muted">The app uses a broad arithmetic Hijri calendar for wide date coverage, then applies your manual month-start corrections for practical moon-sighting adjustments.</p>
+    </div>
+    <div class="card">
+      <div class="section-title">Deployment</div>
+      <p class="muted">Ready for Netlify, Vercel, GitHub Pages, or any static host. Includes manifest, service worker, icons, and an offline shell.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const MONTHS_G = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_H = ["Muharram","Safar","Rabi al-Awwal","Rabi al-Thani","Jumada al-Ula","Jumada al-Thaniyah","Rajab","Sha'ban","Ramadan","Shawwal","Dhul Qa'dah","Dhul Hijjah"];
+const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const SHIA_EVENTS = [{"name": "Islamic New Year", "type": "Major Event", "month": 1, "day": 1}, {"name": "Shahadat of Imam Husayn (Ashura)", "type": "Ayyam-e-Aza", "month": 1, "day": 10}, {"name": "Shahadat of Imam Zayn al-Abidin", "type": "Shahadat", "month": 1, "day": 25}, {"name": "Arbaeen", "type": "Ayyam-e-Aza", "month": 2, "day": 20}, {"name": "Shahadat of Imam Hasan al-Askari", "type": "Shahadat", "month": 2, "day": 8}, {"name": "Shahadat of Prophet Muhammad", "type": "Shahadat", "month": 2, "day": 28}, {"name": "Shahadat of Imam Hasan al-Mujtaba", "type": "Shahadat", "month": 2, "day": 28}, {"name": "Shahadat of Imam Ali al-Ridha", "type": "Shahadat", "month": 2, "day": 29}, {"name": "Wiladat of Prophet Muhammad", "type": "Wiladat", "month": 3, "day": 17}, {"name": "Wiladat of Imam Ja'far al-Sadiq", "type": "Wiladat", "month": 3, "day": 17}, {"name": "Shahadat of Lady Fatimah al-Zahra (1st narration)", "type": "Shahadat", "month": 3, "day": 13}, {"name": "Ayyam-e-Fatimiyyah (commonly observed start)", "type": "Ayyam-e-Aza", "month": 3, "day": 13}, {"name": "Wiladat of Imam Ali ibn Husayn (another tradition often observed)", "type": "Wiladat", "month": 5, "day": 5}, {"name": "Shahadat of Lady Fatimah al-Zahra (2nd narration)", "type": "Shahadat", "month": 6, "day": 3}, {"name": "Shahadat of Imam Ali al-Hadi", "type": "Shahadat", "month": 6, "day": 3}, {"name": "Ayyam-e-Fatimiyyah (commonly observed 2nd period)", "type": "Ayyam-e-Aza", "month": 6, "day": 3}, {"name": "Wiladat of Lady Fatimah al-Zahra", "type": "Wiladat", "month": 6, "day": 20}, {"name": "Wiladat of Imam Muhammad al-Baqir", "type": "Wiladat", "month": 7, "day": 1}, {"name": "Wiladat of Imam Ali", "type": "Wiladat", "month": 7, "day": 13}, {"name": "Shahadat of Imam Musa al-Kazim", "type": "Shahadat", "month": 7, "day": 25}, {"name": "Mab'ath of Prophet Muhammad", "type": "Major Event", "month": 7, "day": 27}, {"name": "Wiladat of Imam Husayn", "type": "Wiladat", "month": 8, "day": 3}, {"name": "Wiladat of Imam Husayn and Day of the Youth of Paradise", "type": "Wiladat", "month": 8, "day": 3}, {"name": "Wiladat of Hazrat Abbas", "type": "Wiladat", "month": 8, "day": 4}, {"name": "Wiladat of Imam Zayn al-Abidin", "type": "Wiladat", "month": 8, "day": 5}, {"name": "Wiladat of Ali Akbar", "type": "Wiladat", "month": 8, "day": 11}, {"name": "Nisf Sha'ban / Wiladat of Imam al-Mahdi", "type": "Wiladat", "month": 8, "day": 15}, {"name": "Shahadat of Lady Khadija", "type": "Shahadat", "month": 9, "day": 10}, {"name": "Wiladat of Imam Hasan al-Mujtaba", "type": "Wiladat", "month": 9, "day": 15}, {"name": "Laylat al-Qadr (19 Ramadan)", "type": "Major Event", "month": 9, "day": 19}, {"name": "Laylat al-Qadr (21 Ramadan)", "type": "Major Event", "month": 9, "day": 21}, {"name": "Shahadat of Imam Ali", "type": "Shahadat", "month": 9, "day": 21}, {"name": "Laylat al-Qadr (23 Ramadan)", "type": "Major Event", "month": 9, "day": 23}, {"name": "Eid al-Fitr", "type": "Major Event", "month": 10, "day": 1}, {"name": "Shahadat of Imam Ja'far al-Sadiq", "type": "Shahadat", "month": 10, "day": 25}, {"name": "Wiladat of Lady Fatimah al-Ma'sumah", "type": "Wiladat", "month": 11, "day": 1}, {"name": "Wiladat of Imam Ali al-Ridha", "type": "Wiladat", "month": 11, "day": 11}, {"name": "Dahw al-Ard", "type": "Major Event", "month": 11, "day": 25}, {"name": "Shahadat of Imam Muhammad al-Taqi", "type": "Shahadat", "month": 11, "day": 29}, {"name": "Wiladat of Imam Musa al-Kazim", "type": "Wiladat", "month": 12, "day": 7}, {"name": "Shahadat of Imam Muhammad al-Baqir", "type": "Shahadat", "month": 12, "day": 7}, {"name": "Wiladat of Imam Hasan al-Askari", "type": "Wiladat", "month": 12, "day": 8}, {"name": "Wiladat of Imam Muhammad al-Taqi", "type": "Wiladat", "month": 12, "day": 10}, {"name": "Wiladat of Imam Ali al-Hadi", "type": "Wiladat", "month": 12, "day": 15}, {"name": "Eid al-Ghadir", "type": "Major Event", "month": 12, "day": 18}, {"name": "Mubahala", "type": "Major Event", "month": 12, "day": 24}];
+let state = {
+  overrides: [],
+  browseGregorianYear: new Date().getFullYear(),
+  browseGregorianMonth: new Date().getMonth()+1,
+  browseHijriYear: 1447,
+  browseHijriMonth: 10,
+  hDay: 1, hMonth: 10, hYear: 1447
+};
+
+function gregorianToJdn(year, month, day){const a=Math.floor((14-month)/12),y=year+4800-a,m=month+12*a-3;return day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;}
+function jdnToGregorian(jdn){const a=jdn+32044,b=Math.floor((4*a+3)/146097),c=a-Math.floor((146097*b)/4),d=Math.floor((4*c+3)/1461),e=c-Math.floor((1461*d)/4),m=Math.floor((5*e+2)/153);return {day:e-Math.floor((153*m+2)/5)+1,month:m+3-12*Math.floor(m/10),year:100*b+d-4800+Math.floor(m/10)};}
+function islamicToJdn(year, month, day){return day+Math.ceil(29.5*(month-1))+(year-1)*354+Math.floor((3+11*year)/30)+1948439;}
+function jdnToIslamic(jdn){const year=Math.floor((30*(jdn-1948439)+10646)/10631);const month=Math.min(12,Math.ceil((jdn-29-islamicToJdn(year,1,1))/29.5)+1);const day=jdn-islamicToJdn(year,month,1)+1;return {year,month,day};}
+function compareHijri(a,b){return a.year!==b.year?a.year-b.year:a.month!==b.month?a.month-b.month:a.day-b.day;}
+function addHijriMonths(year, month, delta){const total=year*12+(month-1)+delta;return {year:Math.floor(total/12),month:((total%12)+12)%12+1};}
+function formatGregorian(g){return `${g.day} ${MONTHS_G[g.month-1]} ${g.year}`;}
+function formatHijri(h){return `${h.day} ${MONTHS_H[h.month-1]} ${h.year} AH`;}
+function weekdayFromGregorian(g){return WEEKDAYS[new Date(Date.UTC(g.year,g.month-1,g.day,12,0,0)).getUTCDay()];}
+function gregorianFromIso(iso){const [year,month,day]=iso.split("-").map(Number);return {year,month,day};}
+function sortOverrides(overrides){return [...overrides].sort((a,b)=>{const c=compareHijri({year:a.hYear,month:a.hMonth,day:1},{year:b.hYear,month:b.hMonth,day:1});return c||a.gDate.localeCompare(b.gDate);});}
+function deltaForMonth(hYear,hMonth,overrides){let delta=0;for(const ov of sortOverrides(overrides)){const cmp=compareHijri({year:hYear,month:hMonth,day:1},{year:ov.hYear,month:ov.hMonth,day:1});if(cmp>=0){const base=islamicToJdn(ov.hYear,ov.hMonth,1);const g=gregorianFromIso(ov.gDate);delta=gregorianToJdn(g.year,g.month,g.day)-base;}}return delta;}
+function adjustedIslamicToJdn(hYear,hMonth,hDay,overrides){return islamicToJdn(hYear,hMonth,hDay)+deltaForMonth(hYear,hMonth,overrides);}
+function adjustedIslamicToGregorian(hYear,hMonth,hDay,overrides){return jdnToGregorian(adjustedIslamicToJdn(hYear,hMonth,hDay,overrides));}
+function adjustedMonthStartJdn(hYear,hMonth,overrides){return adjustedIslamicToJdn(hYear,hMonth,1,overrides);}
+function adjustedGregorianToIslamic(gYear,gMonth,gDay,overrides){const target=gregorianToJdn(gYear,gMonth,gDay),approx=jdnToIslamic(target);for(let i=-3;i<=3;i++){const cand=addHijriMonths(approx.year,approx.month,i);const start=adjustedMonthStartJdn(cand.year,cand.month,overrides);const next=addHijriMonths(cand.year,cand.month,1);const nextStart=adjustedMonthStartJdn(next.year,next.month,overrides);if(target>=start&&target<nextStart)return {year:cand.year,month:cand.month,day:target-start+1};}return jdnToIslamic(target-deltaForMonth(approx.year,approx.month,overrides));}
+function currentHijriYear(overrides){const d=new Date();return adjustedGregorianToIslamic(d.getFullYear(),d.getMonth()+1,d.getDate(),overrides).year;}
+function badgeClass(type){if(type==="Wiladat")return "badge wiladat";if(type==="Shahadat")return "badge shahadat";if(type==="Ayyam-e-Aza")return "badge aza";return "badge major";}
+function eventRank(type){return type==="Ayyam-e-Aza"?1:type==="Shahadat"?2:type==="Major Event"?3:4;}
+function daysInGregorianMonth(year,month){return new Date(year,month,0).getDate();}
+function eventListForCurrentYear(){const hy=currentHijriYear(state.overrides);return SHIA_EVENTS.map(e=>{const g=adjustedIslamicToGregorian(hy,e.month,e.day,state.overrides);return {...e,hYear:hy,g,weekday:weekdayFromGregorian(g)};}).sort((a,b)=>{const da=gregorianToJdn(a.g.year,a.g.month,a.g.day),db=gregorianToJdn(b.g.year,b.g.month,b.g.day);return da!==db?da-db:eventRank(a.type)-eventRank(b.type);});}
+function filteredEvents(){const q=document.getElementById("eventSearch").value.trim().toLowerCase();const base=eventListForCurrentYear();return !q?base:base.filter(e=>e.name.toLowerCase().includes(q)||e.type.toLowerCase().includes(q)||MONTHS_H[e.month-1].toLowerCase().includes(q));}
+function showNotice(msg){const n=document.getElementById("notice");n.textContent=msg;n.style.display="block";clearTimeout(showNotice.t);showNotice.t=setTimeout(()=>n.style.display="none",3500);}
+function saveState(){localStorage.setItem("sizaCalendarState",JSON.stringify(state));}
+function loadState(){try{const stored=localStorage.getItem("sizaCalendarState");const hash=location.hash.replace(/^#/,"");if(hash){const parsed=JSON.parse(atob(decodeURIComponent(hash)));state={...state,...parsed};}else if(stored){state={...state,...JSON.parse(stored)};}}catch(e){}}
+function persist(msg){saveState();renderAll();if(msg)showNotice(msg);}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function renderStats(){const cy=currentHijriYear(state.overrides);document.getElementById("statYear").textContent=`${cy} AH`;document.getElementById("statAshura").textContent=formatGregorian(adjustedIslamicToGregorian(cy,1,10,state.overrides));document.getElementById("statGhadir").textContent=formatGregorian(adjustedIslamicToGregorian(cy,12,18,state.overrides));}
+function renderConverters(){const g=gregorianFromIso(document.getElementById("gInput").value);const h=adjustedGregorianToIslamic(g.year,g.month,g.day,state.overrides);document.getElementById("gToHPrimary").textContent=formatHijri(h);document.getElementById("gToHSecondary").textContent=weekdayFromGregorian(g);document.getElementById("gToHHelper").textContent=`Gregorian input: ${formatGregorian(g)}`;const hh={day:+document.getElementById("hDay").value,month:+document.getElementById("hMonth").value,year:+document.getElementById("hYear").value};const gg=adjustedIslamicToGregorian(hh.year,hh.month,hh.day,state.overrides);document.getElementById("hToGPrimary").textContent=formatGregorian(gg);document.getElementById("hToGSecondary").textContent=weekdayFromGregorian(gg);document.getElementById("hToGHelper").textContent=`Hijri input: ${formatHijri(hh)}`;}
+function renderEvents(){const events=filteredEvents();const sel=document.getElementById("eventSelect");const prev=sel.value;sel.innerHTML=events.map(e=>`<option value="${escapeHtml(e.name)}">${escapeHtml(e.name)}</option>`).join("");if(events.length){sel.value=events.find(e=>e.name===prev)?.name||events[0].name;const current=events.find(e=>e.name===sel.value);document.getElementById("eventDetail").innerHTML=`<div class="${badgeClass(current.type)}">${current.type}</div><div style="font-weight:800;font-size:1.15rem;margin-top:10px">${escapeHtml(current.name)}</div><div style="margin-top:6px">Hijri: ${current.day} ${MONTHS_H[current.month-1]} ${current.hYear} AH</div><div>Gregorian: ${formatGregorian(current.g)} (${current.weekday})</div>`;}else{document.getElementById("eventDetail").textContent="No matching events found.";}document.getElementById("eventYearLabel").textContent=currentHijriYear(state.overrides);document.getElementById("eventsGrid").innerHTML=events.map(e=>`<div class="event-card"><div class="${badgeClass(e.type)}">${e.type}</div><div style="font-weight:700;margin-top:8px">${escapeHtml(e.name)}</div><div class="muted" style="margin-top:4px">${e.day} ${MONTHS_H[e.month-1]} ${e.hYear} AH</div><div class="muted">${formatGregorian(e.g)} • ${e.weekday}</div></div>`).join("");}
+function renderGregorianCalendar(){const y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value;document.getElementById("gBrowseLabel").textContent=`${MONTHS_G[m-1]} ${y}`;document.getElementById("weekdaysG").innerHTML=WEEKDAYS.map(d=>`<div class="weekday">${d.slice(0,3)}</div>`).join("");const first=new Date(y,m-1,1).getDay(),total=daysInGregorianMonth(y,m),events=filteredEvents();let cells=[];for(let i=0;i<first;i++)cells.push(null);for(let day=1;day<=total;day++){const g={year:y,month:m,day},h=adjustedGregorianToIslamic(y,m,day,state.overrides),list=events.filter(e=>e.g.year===y&&e.g.month===m&&e.g.day===day);cells.push({g,h,list});}while(cells.length%7!==0)cells.push(null);document.getElementById("gCalendar").innerHTML=cells.map(cell=>!cell?`<div class="cell"></div>`:`<div class="cell"><div class="cell-top"><div class="gday">${cell.g.day}</div><div class="hday">${cell.h.day} ${MONTHS_H[cell.h.month-1].slice(0,3)}</div></div>${cell.list.slice(0,3).map(e=>`<span class="event-chip ${badgeClass(e.type).replace("badge ","")}">${escapeHtml(e.name)}</span>`).join("")}${cell.list.length>3?`<div class="muted" style="margin-top:4px;font-size:.72rem">+${cell.list.length-3} more</div>`:""}</div>`).join("");}
+function renderHijriCalendar(){const y=+document.getElementById("browseHYear").value,m=+document.getElementById("browseHMonth").value;document.getElementById("hBrowseLabel").textContent=`${MONTHS_H[m-1]} ${y} AH`;document.getElementById("weekdaysH").innerHTML=WEEKDAYS.map(d=>`<div class="weekday">${d.slice(0,3)}</div>`).join("");const startG=adjustedIslamicToGregorian(y,m,1,state.overrides),next=addHijriMonths(y,m,1),nextStartG=adjustedIslamicToGregorian(next.year,next.month,1,state.overrides),monthLength=gregorianToJdn(nextStartG.year,nextStartG.month,nextStartG.day)-gregorianToJdn(startG.year,startG.month,startG.day),first=new Date(startG.year,startG.month-1,startG.day).getDay(),events=filteredEvents();let cells=[];for(let i=0;i<first;i++)cells.push(null);for(let day=1;day<=monthLength;day++){const g=adjustedIslamicToGregorian(y,m,day,state.overrides),list=events.filter(e=>e.hYear===y&&e.month===m&&e.day===day);cells.push({h:{year:y,month:m,day},g,list});}while(cells.length%7!==0)cells.push(null);document.getElementById("hCalendar").innerHTML=cells.map(cell=>!cell?`<div class="cell"></div>`:`<div class="cell"><div class="cell-top"><div class="gday">${cell.h.day}</div><div class="hday">${cell.g.day} ${MONTHS_G[cell.g.month-1].slice(0,3)}</div></div>${cell.list.slice(0,3).map(e=>`<span class="event-chip ${badgeClass(e.type).replace("badge ","")}">${escapeHtml(e.name)}</span>`).join("")}${cell.list.length>3?`<div class="muted" style="margin-top:4px;font-size:.72rem">+${cell.list.length-3} more</div>`:""}</div>`).join("");}
+function renderOverrides(){const list=sortOverrides(state.overrides),box=document.getElementById("savedOverrides");if(!list.length){box.innerHTML=`<div class="small">No manual corrections saved yet.</div>`;return;}box.innerHTML=list.map((ov,idx)=>`<div class="saved-item"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><div style="font-weight:700">1 ${MONTHS_H[ov.hMonth-1]} ${ov.hYear} AH</div><div class="muted">set to ${ov.gDate}</div></div><button data-remove="${idx}">Remove</button></div></div>`).join("");box.querySelectorAll("[data-remove]").forEach(btn=>btn.onclick=()=>{state.overrides=list.filter((_,i)=>i!==+btn.dataset.remove);persist("Correction removed.");});}
+function renderAll(){renderStats();renderConverters();renderEvents();renderGregorianCalendar();renderHijriCalendar();renderOverrides();}
+function setup(){
+  loadState();
+  const today=new Date();
+  document.getElementById("gInput").value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+  document.getElementById("hMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
+  document.getElementById("browseGMonth").innerHTML=MONTHS_G.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");
+  document.getElementById("browseHMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
+  document.getElementById("ovMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
+  document.getElementById("hMonth").value=state.hMonth;document.getElementById("hYear").value=state.hYear;document.getElementById("hDay").value=state.hDay;
+  document.getElementById("browseGYear").value=state.browseGregorianYear;document.getElementById("browseGMonth").value=state.browseGregorianMonth;document.getElementById("browseGSlider").value=state.browseGregorianYear;
+  document.getElementById("browseHYear").value=state.browseHijriYear;document.getElementById("browseHMonth").value=state.browseHijriMonth;document.getElementById("browseHSlider").value=state.browseHijriYear;
+  document.getElementById("ovMonth").value=10;
+
+  document.querySelectorAll(".tab").forEach(tab=>tab.onclick=()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));tab.classList.add("active");document.getElementById(`pane-${tab.dataset.tab}`).classList.add("active");});
+  ["gInput","hMonth","hYear","hDay","eventSearch","browseGYear","browseGMonth","browseHYear","browseHMonth"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{state.hMonth=+document.getElementById("hMonth").value;state.hYear=+document.getElementById("hYear").value;state.hDay=+document.getElementById("hDay").value;state.browseGregorianYear=+document.getElementById("browseGYear").value;state.browseGregorianMonth=+document.getElementById("browseGMonth").value;state.browseHijriYear=+document.getElementById("browseHYear").value;state.browseHijriMonth=+document.getElementById("browseHMonth").value;saveState();renderAll();}));
+  document.getElementById("browseGSlider").oninput=e=>{document.getElementById("browseGYear").value=e.target.value;state.browseGregorianYear=+e.target.value;persist();};
+  document.getElementById("browseHSlider").oninput=e=>{document.getElementById("browseHYear").value=e.target.value;state.browseHijriYear=+e.target.value;persist();};
+  document.getElementById("prevG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value-1;if(m<1){m=12;y--;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};
+  document.getElementById("nextG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value+1;if(m>12){m=1;y++;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};
+  document.getElementById("prevH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,-1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};
+  document.getElementById("nextH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};
+  document.getElementById("saveOverride").onclick=()=>{const entry={hYear:+document.getElementById("ovYear").value,hMonth:+document.getElementById("ovMonth").value,gDate:document.getElementById("ovDate").value};state.overrides=sortOverrides([...state.overrides.filter(o=>!(o.hYear===entry.hYear&&o.hMonth===entry.hMonth)),entry]);persist(`Saved override for 1 ${MONTHS_H[entry.hMonth-1]} ${entry.hYear} AH = ${entry.gDate}`);};
+  document.getElementById("clearOverrides").onclick=()=>{state.overrides=[];persist("All future manual corrections were cleared.");};
+  document.getElementById("copyLink").onclick=async()=>{const payload=encodeURIComponent(btoa(JSON.stringify(state)));await navigator.clipboard.writeText(`${location.origin}${location.pathname}#${payload}`);showNotice("Share link copied.");};
+  document.getElementById("exportJson").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="siza-calendar-settings.json";a.click();URL.revokeObjectURL(a.href);showNotice("Settings exported.");};
+  document.getElementById("importJson").onchange=(evt)=>{const file=evt.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state={...state,...JSON.parse(String(reader.result))};setup();persist("Settings imported.");}catch(e){showNotice("Could not read that file.");}};reader.readAsText(file);};
+  renderAll();
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+setup();
+</script>
+</body>
+</html>
