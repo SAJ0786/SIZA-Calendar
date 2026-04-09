@@ -10,76 +10,98 @@
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <style>
-    :root{
+    :root {
       --bg:#f4f7fa; --card:#ffffff; --ink:#31424f; --muted:#708392; --line:#d9e2ea;
-      --brand:#6f8291; --brand2:#aebdca;
-      --wiladat:#eefbf4; --wiladat-ink:#1f6b49;
-      --aza:#fdf0f4; --aza-ink:#8b2f4d;
-      --major:#fff8e8; --major-ink:#8b6a16;
+      --brand:#6f8291; --brand2:#9fb4c4; --accent:#c7a86d; --accent2:#d98fa2;
+      --wiladat:#eefbf4; --wiladat-ink:#1f6b49; --aza:#fdf0f4; --aza-ink:#8b2f4d; --major:#fff8e8; --major-ink:#8b6a16;
       --shahadat:#475866; --shahadat-ink:#ffffff;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f5f8fb,#edf3f8,#f7fafc);color:var(--ink)}
-    .wrap{max-width:1180px;margin:0 auto;padding:16px}
-    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 30px rgba(68,91,110,.08)}
-    .hero{padding:20px;margin-bottom:16px}
-    .grid{display:grid;gap:16px} .hero-grid{grid-template-columns:1.6fr 1fr} .stats{grid-template-columns:repeat(3,1fr)}
-    .stat,.notice,.small,.event-chip{border-radius:18px} .stat{padding:14px;background:#f7fafc}
-    .small{padding:10px 12px;background:#f7fafc} .card{padding:18px} .section-title{font-size:1.1rem;font-weight:700;margin:0 0 10px}
-    h1{margin:0;font-size:clamp(1.7rem,2.6vw,2.6rem)} p{margin:.35rem 0} .muted{color:var(--muted)} .row{display:flex;gap:10px;flex-wrap:wrap}
-    .tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
-    .tab{padding:12px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
-    .tab.active{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:var(--brand)}
-    .pane{display:none} .pane.active{display:block}
-    label{display:block;font-size:.92rem;font-weight:600;margin:0 0 6px}
-    input,select,button{font:inherit}
-    input,select{width:100%;padding:12px 14px;border:1px solid #c8d4de;border-radius:16px;background:#fff;color:var(--ink)}
-    button{padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
-    button.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:var(--brand)}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:16px} .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .result{padding:16px;border-radius:20px;background:#f7fafc}
-    .result .big{font-weight:800;font-size:1.6rem}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.75rem;font-weight:700;border:1px solid transparent}
-    .wiladat{background:var(--wiladat);color:var(--wiladat-ink);border-color:#bce8cb}
-    .shahadat{background:var(--shahadat);color:var(--shahadat-ink);border-color:var(--shahadat)}
-    .aza{background:var(--aza);color:var(--aza-ink);border-color:#f5c5d1}
-    .major{background:var(--major);color:var(--major-ink);border-color:#f4df9e}
-    .events-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-height:780px;overflow:auto;padding-right:4px}
-    .event-card{padding:14px;border-radius:18px;border:1px solid var(--line);background:#fff}
-    .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .calendar{overflow:hidden;border:1px solid var(--line);border-radius:24px;background:#fff}
-    .weekday,.cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-    .weekday:last-child,.cell:nth-child(7n){border-right:none}
-    .weekdays,.cells{display:grid;grid-template-columns:repeat(7,1fr)}
-    .weekday{padding:12px;text-align:center;font-size:.75rem;font-weight:800;text-transform:uppercase;background:#f7fafc;color:var(--muted)}
-    .cell{min-height:110px;padding:10px}
-    .cell-top{display:flex;justify-content:space-between;gap:8px} .gday{font-weight:800} .hday{font-size:.72rem;color:var(--muted)}
-    .event-chip{font-size:.64rem;padding:4px 6px;margin-top:6px;border:1px solid transparent;display:block}
-    .footer-note{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .notice{padding:12px 14px;background:#edf7ff;border:1px solid #c5dff0;color:#36556c;margin:10px 0}
-    .brand-box{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand-logo-wrap{display:flex;align-items:center;gap:14px}
-    .brand-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#eef3f7,#dfe8ef);display:grid;place-items:center;overflow:hidden;border:1px solid var(--line)}
-    .brand-logo img{width:88%;height:88%;object-fit:contain}
-    .search{position:relative} .search input{padding-left:38px} .search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8}
-    .navrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-    .saved-item{padding:14px;border:1px solid var(--line);border-radius:18px}
-    @media (max-width:900px){
-      .hero-grid,.two,.events-grid,.footer-note{grid-template-columns:1fr}
-      .stats,.controls,.three{grid-template-columns:1fr}
-      .tabs{grid-template-columns:1fr 1fr}
-      .cell{min-height:88px;padding:8px}
+    * { box-sizing:border-box }
+    body { margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; background:
+      radial-gradient(circle at top right, rgba(159,180,196,.22), transparent 28%),
+      radial-gradient(circle at bottom left, rgba(199,168,109,.16), transparent 24%),
+      linear-gradient(180deg,#f5f8fb,#edf3f8,#f7fafc); color:var(--ink); }
+    .wrap { max-width:1180px; margin:0 auto; padding:16px }
+    .hero, .card, .menu-panel { background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:0 10px 30px rgba(68,91,110,.08) }
+    .hero { padding:20px; margin-bottom:16px; position:sticky; top:0; z-index:20; backdrop-filter: blur(10px); background:rgba(255,255,255,.92) }
+    .grid { display:grid; gap:16px } .hero-grid { grid-template-columns:1.6fr 1fr } .stats { grid-template-columns:repeat(3,1fr) }
+    .stat,.notice,.small,.event-chip { border-radius:18px } .stat { padding:14px; background:#f7fafc; border:1px solid #e6edf3 }
+    .small { padding:10px 12px; background:#f7fafc } .card { padding:18px } .section-title { font-size:1.1rem; font-weight:700; margin:0 0 10px }
+    h1 { margin:0; font-size:clamp(1.7rem,2.6vw,2.6rem) } p { margin:.35rem 0 } .muted { color:var(--muted) } .row { display:flex; gap:10px; flex-wrap:wrap }
+    .pane { display:none } .pane.active { display:block }
+    label { display:block; font-size:.92rem; font-weight:600; margin:0 0 6px }
+    input,select,button { font:inherit }
+    input,select { width:100%; padding:12px 14px; border:1px solid #c8d4de; border-radius:16px; background:#fff; color:var(--ink) }
+    button { padding:12px 14px; border-radius:16px; border:1px solid var(--line); background:#fff; cursor:pointer; color:var(--ink) }
+    button.primary { background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; border-color:var(--brand) }
+    .menu-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; border:none; }
+    .menu-btn .bars { font-size:1.2rem; line-height:1 }
+    .menu-panel {
+      position:fixed; top:18px; left:16px; width:min(320px, calc(100vw - 32px)); z-index:40; padding:12px; display:none;
+      background:rgba(255,255,255,.96); backdrop-filter: blur(12px);
+    }
+    .menu-panel.open { display:block }
+    .menu-item {
+      width:100%; text-align:left; padding:13px 14px; margin:6px 0; border-radius:16px; border:1px solid #e7eef3; background:#fff; font-weight:700;
+    }
+    .menu-item.active { background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; border-color:var(--brand) }
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:16px } .three { display:grid; grid-template-columns:repeat(3,1fr); gap:12px }
+    .result { padding:16px; border-radius:20px; background:#f7fafc; border:1px solid #e8eef3 }
+    .result .big { font-weight:800; font-size:1.6rem }
+    .badge { display:inline-block; padding:6px 10px; border-radius:999px; font-size:.75rem; font-weight:700; border:1px solid transparent }
+    .wiladat { background:var(--wiladat); color:var(--wiladat-ink); border-color:#bce8cb }
+    .shahadat { background:var(--shahadat); color:var(--shahadat-ink); border-color:var(--shahadat) }
+    .aza { background:var(--aza); color:var(--aza-ink); border-color:#f5c5d1 }
+    .major { background:var(--major); color:var(--major-ink); border-color:#f4df9e }
+    .events-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; max-height:780px; overflow:auto; padding-right:4px }
+    .event-card { padding:14px; border-radius:18px; border:1px solid var(--line); background:#fff; box-shadow:0 6px 18px rgba(111,130,145,.05) }
+    .controls { display:grid; grid-template-columns:repeat(3,1fr); gap:12px }
+    .calendar { overflow:hidden; border:1px solid var(--line); border-radius:24px; background:#fff }
+    .weekday,.cell { border-right:1px solid var(--line); border-bottom:1px solid var(--line) }
+    .weekday:last-child,.cell:nth-child(7n) { border-right:none }
+    .weekdays,.cells { display:grid; grid-template-columns:repeat(7,1fr) }
+    .weekday { padding:12px; text-align:center; font-size:.75rem; font-weight:800; text-transform:uppercase; background:linear-gradient(180deg,#f7fafc,#eef3f7); color:var(--muted) }
+    .cell { min-height:110px; padding:10px; background:linear-gradient(180deg,#fff,#fcfdff) }
+    .cell-top { display:flex; justify-content:space-between; gap:8px } .gday { font-weight:800 } .hday { font-size:.72rem; color:var(--muted) }
+    .event-chip { font-size:.64rem; padding:4px 6px; margin-top:6px; border:1px solid transparent; display:block }
+    .footer-note { display:grid; grid-template-columns:1fr 1fr; gap:16px }
+    .notice { padding:12px 14px; background:#edf7ff; border:1px solid #c5dff0; color:#36556c; margin:10px 0 }
+    .brand-box { display:flex; align-items:center; justify-content:space-between; gap:16px }
+    .brand-logo-wrap { display:flex; align-items:center; gap:14px }
+    .brand-logo { width:68px; height:68px; border-radius:18px; background:linear-gradient(135deg,#eef3f7,#dfe8ef); display:grid; place-items:center; overflow:hidden; border:1px solid var(--line); box-shadow:inset 0 1px 0 rgba(255,255,255,.8) }
+    .brand-logo img { width:88%; height:88%; object-fit:contain }
+    .search { position:relative } .search input { padding-left:38px } .search .icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#94a3b8 }
+    .navrow { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px }
+    .saved-item { padding:14px; border:1px solid var(--line); border-radius:18px }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
+    .chipbtn { padding:9px 12px; border-radius:999px; border:1px solid #d8e1e8; background:#fff; font-weight:700; cursor:pointer }
+    .chipbtn.active { background:linear-gradient(135deg,var(--accent), var(--accent2)); color:#fff; border-color:transparent }
+    .menu-hint { font-size:.85rem; color:var(--muted) }
+    @media (max-width:900px) {
+      .hero-grid,.two,.events-grid,.footer-note { grid-template-columns:1fr }
+      .stats,.controls,.three { grid-template-columns:1fr }
+      .cell { min-height:88px; padding:8px }
     }
   </style>
 </head>
 <body>
+<div class="menu-panel" id="menuPanel">
+  <button class="menu-item active" data-pane="convert">Convert</button>
+  <button class="menu-item" data-pane="events">Events</button>
+  <button class="menu-item" data-pane="gregorian">Gregorian View</button>
+  <button class="menu-item" data-pane="hijri">Hijri View</button>
+  <button class="menu-item" data-pane="adjust">Adjust Future Dates</button>
+  <button class="menu-item" data-pane="about">About</button>
+</div>
+
 <div class="wrap">
   <div class="hero">
     <div class="grid hero-grid">
       <div>
         <div class="brand-box">
           <div class="brand-logo-wrap">
-            <div class="brand-logo"><img src="icons/logo.png" alt="SIZA logo"></div>
+            <button class="menu-btn" id="menuToggle"><span class="bars">☰</span> Menu</button>
+            <div class="brand-logo"><img src="data:image/png;base64,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" alt="SIZA logo"></div>
             <div>
               <h1>SIZA</h1>
               <p class="muted">Calendar Religiously</p>
@@ -93,149 +115,57 @@
         </div>
       </div>
       <div class="card" style="padding:16px">
-        <div class="section-title">About</div>
-        <p class="muted">A mobile-friendly Hijri ↔ Gregorian Shia calendar with event lookup, month browsers, and moon-sighting correction controls.</p>
-        <div class="small" style="margin-top:10px"><b>Brand:</b> SIZA</div>
-        <div class="small" style="margin-top:10px"><b>Home screen title:</b> Calendar Religiously</div>
-        <div class="row" style="margin-top:12px">
+        <div class="section-title">Quick Tools</div>
+        <div class="row">
           <button id="copyLink">Copy share link</button>
           <button id="exportJson">Export settings</button>
           <label class="small" style="cursor:pointer">Import settings<input id="importJson" type="file" accept="application/json" hidden></label>
         </div>
+        <p class="menu-hint" style="margin-top:12px">Open sections from the hamburger menu on the left.</p>
       </div>
     </div>
   </div>
 
   <div id="notice" class="notice" style="display:none"></div>
 
-  <div class="tabs">
-    <button class="tab active" data-tab="convert">Convert</button>
-    <button class="tab" data-tab="events">Events</button>
-    <button class="tab" data-tab="gregorian">Gregorian View</button>
-    <button class="tab" data-tab="hijri">Hijri View</button>
-    <button class="tab" data-tab="adjust">Adjust Future Dates</button>
-  </div>
+  <div class="pane active" id="pane-convert"><div class="two">
+      <div class="card"><div class="section-title">Gregorian → Hijri</div><label>Gregorian date</label><input type="date" id="gInput">
+        <div class="result" style="margin-top:12px"><div class="muted" style="font-size:.82rem">Converted Hijri Date</div><div class="big" id="gToHPrimary"></div><div id="gToHSecondary"></div><div class="muted" id="gToHHelper" style="margin-top:6px"></div></div></div>
+      <div class="card"><div class="section-title">Hijri → Gregorian</div><div class="three"><div><label>Hijri day</label><input type="number" min="1" max="30" id="hDay" value="1"></div><div><label>Hijri month</label><select id="hMonth"></select></div><div><label>Hijri year</label><input type="number" id="hYear" value="1447"></div></div>
+        <div class="result" style="margin-top:12px"><div class="muted" style="font-size:.82rem">Converted Gregorian Date</div><div class="big" id="hToGPrimary"></div><div id="hToGSecondary"></div><div class="muted" id="hToGHelper" style="margin-top:6px"></div></div></div>
+  </div></div>
 
-  <div class="pane active" id="pane-convert">
-    <div class="two">
-      <div class="card">
-        <div class="section-title">Gregorian → Hijri</div>
-        <label>Gregorian date</label>
-        <input type="date" id="gInput">
-        <div class="result" style="margin-top:12px">
-          <div class="muted" style="font-size:.82rem">Converted Hijri Date</div>
-          <div class="big" id="gToHPrimary"></div>
-          <div id="gToHSecondary"></div>
-          <div class="muted" id="gToHHelper" style="margin-top:6px"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="section-title">Hijri → Gregorian</div>
-        <div class="three">
-          <div><label>Hijri day</label><input type="number" min="1" max="30" id="hDay" value="1"></div>
-          <div><label>Hijri month</label><select id="hMonth"></select></div>
-          <div><label>Hijri year</label><input type="number" id="hYear" value="1447"></div>
-        </div>
-        <div class="result" style="margin-top:12px">
-          <div class="muted" style="font-size:.82rem">Converted Gregorian Date</div>
-          <div class="big" id="hToGPrimary"></div>
-          <div id="hToGSecondary"></div>
-          <div class="muted" id="hToGHelper" style="margin-top:6px"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="pane" id="pane-events"><div class="two">
+      <div class="card"><div class="section-title">Event Finder</div><div class="chips"><button class="chipbtn active" id="modeGregorian">Current Gregorian Year</button><button class="chipbtn" id="modeHijri">Current Hijri Year</button></div>
+        <label>Search events</label><div class="search"><span class="icon">🔎</span><input id="eventSearch" placeholder="Search by name, type, or Hijri month"></div>
+        <div style="margin-top:12px"><label>Select Shia event</label><select id="eventSelect"></select></div><div id="eventDetail" class="result" style="margin-top:12px"></div></div>
+      <div class="card"><div class="section-title">Events for <span id="eventYearLabel"></span></div><div class="events-grid" id="eventsGrid"></div></div>
+  </div></div>
 
-  <div class="pane" id="pane-events">
-    <div class="two">
-      <div class="card">
-        <div class="section-title">Event Finder</div>
-        <label>Search events</label>
-        <div class="search"><span class="icon">🔎</span><input id="eventSearch" placeholder="Search by name, type, or Hijri month"></div>
-        <div style="margin-top:12px">
-          <label>Select Shia event</label>
-          <select id="eventSelect"></select>
-        </div>
-        <div id="eventDetail" class="result" style="margin-top:12px"></div>
-      </div>
-      <div class="card">
-        <div class="section-title">All Key Events for <span id="eventYearLabel"></span> AH</div>
-        <div class="events-grid" id="eventsGrid"></div>
-      </div>
-    </div>
-  </div>
+  <div class="pane" id="pane-gregorian"><div class="card">
+    <div class="navrow"><button id="prevG">← Previous</button><div style="font-weight:800" id="gBrowseLabel"></div><button id="nextG">Next →</button></div>
+    <div class="controls" style="margin-bottom:12px"><div><label>Gregorian month</label><select id="browseGMonth"></select></div><div><label>Gregorian year</label><input type="number" min="1976" max="2076" id="browseGYear"></div><div><label>Quick year</label><input type="range" min="1976" max="2076" id="browseGSlider"></div></div>
+    <div class="calendar"><div class="weekdays" id="weekdaysG"></div><div class="cells" id="gCalendar"></div></div>
+  </div></div>
 
-  <div class="pane" id="pane-gregorian">
-    <div class="card">
-      <div class="navrow">
-        <button id="prevG">← Previous</button>
-        <div style="font-weight:800" id="gBrowseLabel"></div>
-        <button id="nextG">Next →</button>
-      </div>
-      <div class="controls" style="margin-bottom:12px">
-        <div><label>Gregorian month</label><select id="browseGMonth"></select></div>
-        <div><label>Gregorian year</label><input type="number" min="1976" max="2076" id="browseGYear"></div>
-        <div><label>Quick year</label><input type="range" min="1976" max="2076" id="browseGSlider"></div>
-      </div>
-      <div class="calendar">
-        <div class="weekdays" id="weekdaysG"></div>
-        <div class="cells" id="gCalendar"></div>
-      </div>
-    </div>
-  </div>
+  <div class="pane" id="pane-hijri"><div class="card">
+    <div class="navrow"><button id="prevH">← Previous</button><div style="font-weight:800" id="hBrowseLabel"></div><button id="nextH">Next →</button></div>
+    <div class="controls" style="margin-bottom:12px"><div><label>Hijri month</label><select id="browseHMonth"></select></div><div><label>Hijri year</label><input type="number" id="browseHYear"></div><div><label>Quick year</label><input type="range" min="1396" max="1496" id="browseHSlider"></div></div>
+    <div class="calendar"><div class="weekdays" id="weekdaysH"></div><div class="cells" id="hCalendar"></div></div>
+  </div></div>
 
-  <div class="pane" id="pane-hijri">
-    <div class="card">
-      <div class="navrow">
-        <button id="prevH">← Previous</button>
-        <div style="font-weight:800" id="hBrowseLabel"></div>
-        <button id="nextH">Next →</button>
-      </div>
-      <div class="controls" style="margin-bottom:12px">
-        <div><label>Hijri month</label><select id="browseHMonth"></select></div>
-        <div><label>Hijri year</label><input type="number" id="browseHYear"></div>
-        <div><label>Quick year</label><input type="range" min="1396" max="1496" id="browseHSlider"></div>
-      </div>
-      <div class="calendar">
-        <div class="weekdays" id="weekdaysH"></div>
-        <div class="cells" id="hCalendar"></div>
-      </div>
-    </div>
-  </div>
+  <div class="pane" id="pane-adjust"><div class="two">
+    <div class="card"><div class="section-title">Future Correction Control</div><p class="muted">Set the Gregorian date for the 1st day of a Hijri month. The app adjusts that month and all future dates from there onward.</p>
+      <div class="controls"><div><label>Hijri month</label><select id="ovMonth"></select></div><div><label>Hijri year</label><input type="number" id="ovYear" value="1447"></div><div><label>Gregorian date for day 1</label><input type="date" id="ovDate" value="2026-03-22"></div></div>
+      <div class="row" style="margin-top:12px"><button class="primary" id="saveOverride">Save correction</button><button id="clearOverrides">Clear all</button></div>
+      <div class="small" style="margin-top:12px">Example: if 1 Shawwal 1447 AH is confirmed as 22 March 2026, set <b>Shawwal 1447</b> to <b>2026-03-22</b>.</div></div>
+    <div class="card"><div class="section-title">Saved Corrections</div><div id="savedOverrides"></div></div>
+  </div></div>
 
-  <div class="pane" id="pane-adjust">
-    <div class="two">
-      <div class="card">
-        <div class="section-title">Future Correction Control</div>
-        <p class="muted">Set the Gregorian date for the 1st day of a Hijri month. The app adjusts that month and all future dates from there onward.</p>
-        <div class="controls">
-          <div><label>Hijri month</label><select id="ovMonth"></select></div>
-          <div><label>Hijri year</label><input type="number" id="ovYear" value="1447"></div>
-          <div><label>Gregorian date for day 1</label><input type="date" id="ovDate" value="2026-03-22"></div>
-        </div>
-        <div class="row" style="margin-top:12px">
-          <button class="primary" id="saveOverride">Save correction</button>
-          <button id="clearOverrides">Clear all</button>
-        </div>
-        <div class="small" style="margin-top:12px">Example: if 1 Shawwal 1447 AH is confirmed as 22 March 2026, set <b>Shawwal 1447</b> to <b>2026-03-22</b>.</div>
-      </div>
-      <div class="card">
-        <div class="section-title">Saved Corrections</div>
-        <div id="savedOverrides"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-note" style="margin-top:16px">
-    <div class="card">
-      <div class="section-title">Engine</div>
-      <p class="muted">The app uses a broad arithmetic Hijri calendar for wide date coverage, then applies your manual month-start corrections for practical moon-sighting adjustments.</p>
-    </div>
-    <div class="card">
-      <div class="section-title">Deployment</div>
-      <p class="muted">Ready for Netlify, Vercel, GitHub Pages, or any static host. Includes manifest, service worker, icons, and an offline shell.</p>
-    </div>
-  </div>
+  <div class="pane" id="pane-about"><div class="footer-note">
+    <div class="card"><div class="section-title">About SIZA</div><p class="muted">SIZA - Calendar Religiously is a mobile-friendly Hijri ↔ Gregorian Shia calendar with event lookup, month browsers, and moon-sighting correction controls.</p><div class="small" style="margin-top:12px"><b>Brand:</b> SIZA</div><div class="small" style="margin-top:10px"><b>Home screen title:</b> Calendar Religiously</div></div>
+    <div class="card"><div class="section-title">Engine & Deployment</div><p class="muted">The app uses a broad arithmetic Hijri calendar for wide date coverage, then applies your manual month-start corrections for practical moon-sighting adjustments.</p><p class="muted">Ready for Netlify, Vercel, GitHub Pages, or any static host. Includes manifest, service worker, icons, and an offline shell.</p></div>
+  </div></div>
 </div>
 
 <script>
@@ -243,15 +173,7 @@ const MONTHS_G = ["January","February","March","April","May","June","July","Augu
 const MONTHS_H = ["Muharram","Safar","Rabi al-Awwal","Rabi al-Thani","Jumada al-Ula","Jumada al-Thaniyah","Rajab","Sha'ban","Ramadan","Shawwal","Dhul Qa'dah","Dhul Hijjah"];
 const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const SHIA_EVENTS = [{"name": "Islamic New Year", "type": "Major Event", "month": 1, "day": 1}, {"name": "Shahadat of Imam Husayn (Ashura)", "type": "Ayyam-e-Aza", "month": 1, "day": 10}, {"name": "Shahadat of Imam Zayn al-Abidin", "type": "Shahadat", "month": 1, "day": 25}, {"name": "Arbaeen", "type": "Ayyam-e-Aza", "month": 2, "day": 20}, {"name": "Shahadat of Imam Hasan al-Askari", "type": "Shahadat", "month": 2, "day": 8}, {"name": "Shahadat of Prophet Muhammad", "type": "Shahadat", "month": 2, "day": 28}, {"name": "Shahadat of Imam Hasan al-Mujtaba", "type": "Shahadat", "month": 2, "day": 28}, {"name": "Shahadat of Imam Ali al-Ridha", "type": "Shahadat", "month": 2, "day": 29}, {"name": "Wiladat of Prophet Muhammad", "type": "Wiladat", "month": 3, "day": 17}, {"name": "Wiladat of Imam Ja'far al-Sadiq", "type": "Wiladat", "month": 3, "day": 17}, {"name": "Shahadat of Lady Fatimah al-Zahra (1st narration)", "type": "Shahadat", "month": 3, "day": 13}, {"name": "Ayyam-e-Fatimiyyah (commonly observed start)", "type": "Ayyam-e-Aza", "month": 3, "day": 13}, {"name": "Wiladat of Imam Ali ibn Husayn (another tradition often observed)", "type": "Wiladat", "month": 5, "day": 5}, {"name": "Shahadat of Lady Fatimah al-Zahra (2nd narration)", "type": "Shahadat", "month": 6, "day": 3}, {"name": "Shahadat of Imam Ali al-Hadi", "type": "Shahadat", "month": 6, "day": 3}, {"name": "Ayyam-e-Fatimiyyah (commonly observed 2nd period)", "type": "Ayyam-e-Aza", "month": 6, "day": 3}, {"name": "Wiladat of Lady Fatimah al-Zahra", "type": "Wiladat", "month": 6, "day": 20}, {"name": "Wiladat of Imam Muhammad al-Baqir", "type": "Wiladat", "month": 7, "day": 1}, {"name": "Wiladat of Imam Ali", "type": "Wiladat", "month": 7, "day": 13}, {"name": "Shahadat of Imam Musa al-Kazim", "type": "Shahadat", "month": 7, "day": 25}, {"name": "Mab'ath of Prophet Muhammad", "type": "Major Event", "month": 7, "day": 27}, {"name": "Wiladat of Imam Husayn", "type": "Wiladat", "month": 8, "day": 3}, {"name": "Wiladat of Imam Husayn and Day of the Youth of Paradise", "type": "Wiladat", "month": 8, "day": 3}, {"name": "Wiladat of Hazrat Abbas", "type": "Wiladat", "month": 8, "day": 4}, {"name": "Wiladat of Imam Zayn al-Abidin", "type": "Wiladat", "month": 8, "day": 5}, {"name": "Wiladat of Ali Akbar", "type": "Wiladat", "month": 8, "day": 11}, {"name": "Nisf Sha'ban / Wiladat of Imam al-Mahdi", "type": "Wiladat", "month": 8, "day": 15}, {"name": "Shahadat of Lady Khadija", "type": "Shahadat", "month": 9, "day": 10}, {"name": "Wiladat of Imam Hasan al-Mujtaba", "type": "Wiladat", "month": 9, "day": 15}, {"name": "Laylat al-Qadr (19 Ramadan)", "type": "Major Event", "month": 9, "day": 19}, {"name": "Laylat al-Qadr (21 Ramadan)", "type": "Major Event", "month": 9, "day": 21}, {"name": "Shahadat of Imam Ali", "type": "Shahadat", "month": 9, "day": 21}, {"name": "Laylat al-Qadr (23 Ramadan)", "type": "Major Event", "month": 9, "day": 23}, {"name": "Eid al-Fitr", "type": "Major Event", "month": 10, "day": 1}, {"name": "Shahadat of Imam Ja'far al-Sadiq", "type": "Shahadat", "month": 10, "day": 25}, {"name": "Wiladat of Lady Fatimah al-Ma'sumah", "type": "Wiladat", "month": 11, "day": 1}, {"name": "Wiladat of Imam Ali al-Ridha", "type": "Wiladat", "month": 11, "day": 11}, {"name": "Dahw al-Ard", "type": "Major Event", "month": 11, "day": 25}, {"name": "Shahadat of Imam Muhammad al-Taqi", "type": "Shahadat", "month": 11, "day": 29}, {"name": "Wiladat of Imam Musa al-Kazim", "type": "Wiladat", "month": 12, "day": 7}, {"name": "Shahadat of Imam Muhammad al-Baqir", "type": "Shahadat", "month": 12, "day": 7}, {"name": "Wiladat of Imam Hasan al-Askari", "type": "Wiladat", "month": 12, "day": 8}, {"name": "Wiladat of Imam Muhammad al-Taqi", "type": "Wiladat", "month": 12, "day": 10}, {"name": "Wiladat of Imam Ali al-Hadi", "type": "Wiladat", "month": 12, "day": 15}, {"name": "Eid al-Ghadir", "type": "Major Event", "month": 12, "day": 18}, {"name": "Mubahala", "type": "Major Event", "month": 12, "day": 24}];
-let state = {
-  overrides: [],
-  browseGregorianYear: new Date().getFullYear(),
-  browseGregorianMonth: new Date().getMonth()+1,
-  browseHijriYear: 1447,
-  browseHijriMonth: 10,
-  hDay: 1, hMonth: 10, hYear: 1447
-};
-
+let state = { overrides: [], browseGregorianYear: new Date().getFullYear(), browseGregorianMonth: new Date().getMonth()+1, browseHijriYear: 1447, browseHijriMonth: 10, hDay: 1, hMonth: 10, hYear: 1447, eventYearMode: "gregorian" };
 function gregorianToJdn(year, month, day){const a=Math.floor((14-month)/12),y=year+4800-a,m=month+12*a-3;return day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;}
 function jdnToGregorian(jdn){const a=jdn+32044,b=Math.floor((4*a+3)/146097),c=a-Math.floor((146097*b)/4),d=Math.floor((4*c+3)/1461),e=c-Math.floor((1461*d)/4),m=Math.floor((5*e+2)/153);return {day:e-Math.floor((153*m+2)/5)+1,month:m+3-12*Math.floor(m/10),year:100*b+d-4800+Math.floor(m/10)};}
 function islamicToJdn(year, month, day){return day+Math.ceil(29.5*(month-1))+(year-1)*354+Math.floor((3+11*year)/30)+1948439;}
@@ -272,50 +194,24 @@ function currentHijriYear(overrides){const d=new Date();return adjustedGregorian
 function badgeClass(type){if(type==="Wiladat")return "badge wiladat";if(type==="Shahadat")return "badge shahadat";if(type==="Ayyam-e-Aza")return "badge aza";return "badge major";}
 function eventRank(type){return type==="Ayyam-e-Aza"?1:type==="Shahadat"?2:type==="Major Event"?3:4;}
 function daysInGregorianMonth(year,month){return new Date(year,month,0).getDate();}
-function eventListForCurrentYear(){const hy=currentHijriYear(state.overrides);return SHIA_EVENTS.map(e=>{const g=adjustedIslamicToGregorian(hy,e.month,e.day,state.overrides);return {...e,hYear:hy,g,weekday:weekdayFromGregorian(g)};}).sort((a,b)=>{const da=gregorianToJdn(a.g.year,a.g.month,a.g.day),db=gregorianToJdn(b.g.year,b.g.month,b.g.day);return da!==db?da-db:eventRank(a.type)-eventRank(b.type);});}
-function filteredEvents(){const q=document.getElementById("eventSearch").value.trim().toLowerCase();const base=eventListForCurrentYear();return !q?base:base.filter(e=>e.name.toLowerCase().includes(q)||e.type.toLowerCase().includes(q)||MONTHS_H[e.month-1].toLowerCase().includes(q));}
+function eventListForCurrentGregorianYear(){const gy=new Date().getFullYear();return SHIA_EVENTS.map(e=>{let candidates=[];for(let hy=currentHijriYear(state.overrides)-1; hy<=currentHijriYear(state.overrides)+1; hy++){const g=adjustedIslamicToGregorian(hy,e.month,e.day,state.overrides);if(g.year===gy)candidates.push({...e,hYear:hy,g,weekday:weekdayFromGregorian(g)});}return candidates;}).flat().sort((a,b)=>{const da=gregorianToJdn(a.g.year,a.g.month,a.g.day),db=gregorianToJdn(b.g.year,b.g.month,b.g.day);return da!==db?da-db:eventRank(a.type)-eventRank(b.type);});}
+function eventListForCurrentHijriYear(){const hy=currentHijriYear(state.overrides);return SHIA_EVENTS.map(e=>{const g=adjustedIslamicToGregorian(hy,e.month,e.day,state.overrides);return {...e,hYear:hy,g,weekday:weekdayFromGregorian(g)};}).sort((a,b)=>{const da=gregorianToJdn(a.g.year,a.g.month,a.g.day),db=gregorianToJdn(b.g.year,b.g.month,b.g.day);return da!==db?da-db:eventRank(a.type)-eventRank(b.type);});}
+function activeEventList(){ return state.eventYearMode==="gregorian" ? eventListForCurrentGregorianYear() : eventListForCurrentHijriYear(); }
+function filteredEvents(){const q=document.getElementById("eventSearch").value.trim().toLowerCase();const base=activeEventList();return !q?base:base.filter(e=>e.name.toLowerCase().includes(q)||e.type.toLowerCase().includes(q)||MONTHS_H[e.month-1].toLowerCase().includes(q));}
 function showNotice(msg){const n=document.getElementById("notice");n.textContent=msg;n.style.display="block";clearTimeout(showNotice.t);showNotice.t=setTimeout(()=>n.style.display="none",3500);}
-function saveState(){localStorage.setItem("sizaCalendarState",JSON.stringify(state));}
-function loadState(){try{const stored=localStorage.getItem("sizaCalendarState");const hash=location.hash.replace(/^#/,"");if(hash){const parsed=JSON.parse(atob(decodeURIComponent(hash)));state={...state,...parsed};}else if(stored){state={...state,...JSON.parse(stored)};}}catch(e){}}
+function saveState(){localStorage.setItem("sizaCalendarStateV2",JSON.stringify(state));}
+function loadState(){try{const stored=localStorage.getItem("sizaCalendarStateV2");const hash=location.hash.replace(/^#/,"");if(hash){const parsed=JSON.parse(atob(decodeURIComponent(hash)));state={...state,...parsed};}else if(stored){state={...state,...JSON.parse(stored)};}}catch(e){}}
 function persist(msg){saveState();renderAll();if(msg)showNotice(msg);}
 function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-
 function renderStats(){const cy=currentHijriYear(state.overrides);document.getElementById("statYear").textContent=`${cy} AH`;document.getElementById("statAshura").textContent=formatGregorian(adjustedIslamicToGregorian(cy,1,10,state.overrides));document.getElementById("statGhadir").textContent=formatGregorian(adjustedIslamicToGregorian(cy,12,18,state.overrides));}
 function renderConverters(){const g=gregorianFromIso(document.getElementById("gInput").value);const h=adjustedGregorianToIslamic(g.year,g.month,g.day,state.overrides);document.getElementById("gToHPrimary").textContent=formatHijri(h);document.getElementById("gToHSecondary").textContent=weekdayFromGregorian(g);document.getElementById("gToHHelper").textContent=`Gregorian input: ${formatGregorian(g)}`;const hh={day:+document.getElementById("hDay").value,month:+document.getElementById("hMonth").value,year:+document.getElementById("hYear").value};const gg=adjustedIslamicToGregorian(hh.year,hh.month,hh.day,state.overrides);document.getElementById("hToGPrimary").textContent=formatGregorian(gg);document.getElementById("hToGSecondary").textContent=weekdayFromGregorian(gg);document.getElementById("hToGHelper").textContent=`Hijri input: ${formatHijri(hh)}`;}
-function renderEvents(){const events=filteredEvents();const sel=document.getElementById("eventSelect");const prev=sel.value;sel.innerHTML=events.map(e=>`<option value="${escapeHtml(e.name)}">${escapeHtml(e.name)}</option>`).join("");if(events.length){sel.value=events.find(e=>e.name===prev)?.name||events[0].name;const current=events.find(e=>e.name===sel.value);document.getElementById("eventDetail").innerHTML=`<div class="${badgeClass(current.type)}">${current.type}</div><div style="font-weight:800;font-size:1.15rem;margin-top:10px">${escapeHtml(current.name)}</div><div style="margin-top:6px">Hijri: ${current.day} ${MONTHS_H[current.month-1]} ${current.hYear} AH</div><div>Gregorian: ${formatGregorian(current.g)} (${current.weekday})</div>`;}else{document.getElementById("eventDetail").textContent="No matching events found.";}document.getElementById("eventYearLabel").textContent=currentHijriYear(state.overrides);document.getElementById("eventsGrid").innerHTML=events.map(e=>`<div class="event-card"><div class="${badgeClass(e.type)}">${e.type}</div><div style="font-weight:700;margin-top:8px">${escapeHtml(e.name)}</div><div class="muted" style="margin-top:4px">${e.day} ${MONTHS_H[e.month-1]} ${e.hYear} AH</div><div class="muted">${formatGregorian(e.g)} • ${e.weekday}</div></div>`).join("");}
+function renderEvents(){document.getElementById("modeGregorian").classList.toggle("active", state.eventYearMode==="gregorian");document.getElementById("modeHijri").classList.toggle("active", state.eventYearMode==="hijri");const events=filteredEvents();const sel=document.getElementById("eventSelect");const prev=sel.value;sel.innerHTML=events.map(e=>`<option value="${escapeHtml(e.name)}__${e.hYear}__${e.day}__${e.month}">${escapeHtml(e.name)}</option>`).join("");if(events.length){const picked=events.find(e=>`${e.name}__${e.hYear}__${e.day}__${e.month}`===prev)||events[0];sel.value=`${picked.name}__${picked.hYear}__${picked.day}__${picked.month}`;document.getElementById("eventDetail").innerHTML=`<div class="${badgeClass(picked.type)}">${picked.type}</div><div style="font-weight:800;font-size:1.15rem;margin-top:10px">${escapeHtml(picked.name)}</div><div style="margin-top:6px">Hijri: ${picked.day} ${MONTHS_H[picked.month-1]} ${picked.hYear} AH</div><div>Gregorian: ${formatGregorian(picked.g)} (${picked.weekday})</div>`;} else {document.getElementById("eventDetail").textContent="No matching events found.";}document.getElementById("eventYearLabel").textContent=state.eventYearMode==="gregorian"?`Gregorian ${new Date().getFullYear()}`:`Hijri ${currentHijriYear(state.overrides)} AH`;document.getElementById("eventsGrid").innerHTML=events.map(e=>`<div class="event-card"><div class="${badgeClass(e.type)}">${e.type}</div><div style="font-weight:700;margin-top:8px">${escapeHtml(e.name)}</div><div class="muted" style="margin-top:4px">${e.day} ${MONTHS_H[e.month-1]} ${e.hYear} AH</div><div class="muted">${formatGregorian(e.g)} • ${e.weekday}</div></div>`).join("");}
 function renderGregorianCalendar(){const y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value;document.getElementById("gBrowseLabel").textContent=`${MONTHS_G[m-1]} ${y}`;document.getElementById("weekdaysG").innerHTML=WEEKDAYS.map(d=>`<div class="weekday">${d.slice(0,3)}</div>`).join("");const first=new Date(y,m-1,1).getDay(),total=daysInGregorianMonth(y,m),events=filteredEvents();let cells=[];for(let i=0;i<first;i++)cells.push(null);for(let day=1;day<=total;day++){const g={year:y,month:m,day},h=adjustedGregorianToIslamic(y,m,day,state.overrides),list=events.filter(e=>e.g.year===y&&e.g.month===m&&e.g.day===day);cells.push({g,h,list});}while(cells.length%7!==0)cells.push(null);document.getElementById("gCalendar").innerHTML=cells.map(cell=>!cell?`<div class="cell"></div>`:`<div class="cell"><div class="cell-top"><div class="gday">${cell.g.day}</div><div class="hday">${cell.h.day} ${MONTHS_H[cell.h.month-1].slice(0,3)}</div></div>${cell.list.slice(0,3).map(e=>`<span class="event-chip ${badgeClass(e.type).replace("badge ","")}">${escapeHtml(e.name)}</span>`).join("")}${cell.list.length>3?`<div class="muted" style="margin-top:4px;font-size:.72rem">+${cell.list.length-3} more</div>`:""}</div>`).join("");}
 function renderHijriCalendar(){const y=+document.getElementById("browseHYear").value,m=+document.getElementById("browseHMonth").value;document.getElementById("hBrowseLabel").textContent=`${MONTHS_H[m-1]} ${y} AH`;document.getElementById("weekdaysH").innerHTML=WEEKDAYS.map(d=>`<div class="weekday">${d.slice(0,3)}</div>`).join("");const startG=adjustedIslamicToGregorian(y,m,1,state.overrides),next=addHijriMonths(y,m,1),nextStartG=adjustedIslamicToGregorian(next.year,next.month,1,state.overrides),monthLength=gregorianToJdn(nextStartG.year,nextStartG.month,nextStartG.day)-gregorianToJdn(startG.year,startG.month,startG.day),first=new Date(startG.year,startG.month-1,startG.day).getDay(),events=filteredEvents();let cells=[];for(let i=0;i<first;i++)cells.push(null);for(let day=1;day<=monthLength;day++){const g=adjustedIslamicToGregorian(y,m,day,state.overrides),list=events.filter(e=>e.hYear===y&&e.month===m&&e.day===day);cells.push({h:{year:y,month:m,day},g,list});}while(cells.length%7!==0)cells.push(null);document.getElementById("hCalendar").innerHTML=cells.map(cell=>!cell?`<div class="cell"></div>`:`<div class="cell"><div class="cell-top"><div class="gday">${cell.h.day}</div><div class="hday">${cell.g.day} ${MONTHS_G[cell.g.month-1].slice(0,3)}</div></div>${cell.list.slice(0,3).map(e=>`<span class="event-chip ${badgeClass(e.type).replace("badge ","")}">${escapeHtml(e.name)}</span>`).join("")}${cell.list.length>3?`<div class="muted" style="margin-top:4px;font-size:.72rem">+${cell.list.length-3} more</div>`:""}</div>`).join("");}
 function renderOverrides(){const list=sortOverrides(state.overrides),box=document.getElementById("savedOverrides");if(!list.length){box.innerHTML=`<div class="small">No manual corrections saved yet.</div>`;return;}box.innerHTML=list.map((ov,idx)=>`<div class="saved-item"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><div style="font-weight:700">1 ${MONTHS_H[ov.hMonth-1]} ${ov.hYear} AH</div><div class="muted">set to ${ov.gDate}</div></div><button data-remove="${idx}">Remove</button></div></div>`).join("");box.querySelectorAll("[data-remove]").forEach(btn=>btn.onclick=()=>{state.overrides=list.filter((_,i)=>i!==+btn.dataset.remove);persist("Correction removed.");});}
 function renderAll(){renderStats();renderConverters();renderEvents();renderGregorianCalendar();renderHijriCalendar();renderOverrides();}
-function setup(){
-  loadState();
-  const today=new Date();
-  document.getElementById("gInput").value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-  document.getElementById("hMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
-  document.getElementById("browseGMonth").innerHTML=MONTHS_G.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");
-  document.getElementById("browseHMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
-  document.getElementById("ovMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");
-  document.getElementById("hMonth").value=state.hMonth;document.getElementById("hYear").value=state.hYear;document.getElementById("hDay").value=state.hDay;
-  document.getElementById("browseGYear").value=state.browseGregorianYear;document.getElementById("browseGMonth").value=state.browseGregorianMonth;document.getElementById("browseGSlider").value=state.browseGregorianYear;
-  document.getElementById("browseHYear").value=state.browseHijriYear;document.getElementById("browseHMonth").value=state.browseHijriMonth;document.getElementById("browseHSlider").value=state.browseHijriYear;
-  document.getElementById("ovMonth").value=10;
-
-  document.querySelectorAll(".tab").forEach(tab=>tab.onclick=()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));tab.classList.add("active");document.getElementById(`pane-${tab.dataset.tab}`).classList.add("active");});
-  ["gInput","hMonth","hYear","hDay","eventSearch","browseGYear","browseGMonth","browseHYear","browseHMonth"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{state.hMonth=+document.getElementById("hMonth").value;state.hYear=+document.getElementById("hYear").value;state.hDay=+document.getElementById("hDay").value;state.browseGregorianYear=+document.getElementById("browseGYear").value;state.browseGregorianMonth=+document.getElementById("browseGMonth").value;state.browseHijriYear=+document.getElementById("browseHYear").value;state.browseHijriMonth=+document.getElementById("browseHMonth").value;saveState();renderAll();}));
-  document.getElementById("browseGSlider").oninput=e=>{document.getElementById("browseGYear").value=e.target.value;state.browseGregorianYear=+e.target.value;persist();};
-  document.getElementById("browseHSlider").oninput=e=>{document.getElementById("browseHYear").value=e.target.value;state.browseHijriYear=+e.target.value;persist();};
-  document.getElementById("prevG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value-1;if(m<1){m=12;y--;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};
-  document.getElementById("nextG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value+1;if(m>12){m=1;y++;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};
-  document.getElementById("prevH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,-1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};
-  document.getElementById("nextH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};
-  document.getElementById("saveOverride").onclick=()=>{const entry={hYear:+document.getElementById("ovYear").value,hMonth:+document.getElementById("ovMonth").value,gDate:document.getElementById("ovDate").value};state.overrides=sortOverrides([...state.overrides.filter(o=>!(o.hYear===entry.hYear&&o.hMonth===entry.hMonth)),entry]);persist(`Saved override for 1 ${MONTHS_H[entry.hMonth-1]} ${entry.hYear} AH = ${entry.gDate}`);};
-  document.getElementById("clearOverrides").onclick=()=>{state.overrides=[];persist("All future manual corrections were cleared.");};
-  document.getElementById("copyLink").onclick=async()=>{const payload=encodeURIComponent(btoa(JSON.stringify(state)));await navigator.clipboard.writeText(`${location.origin}${location.pathname}#${payload}`);showNotice("Share link copied.");};
-  document.getElementById("exportJson").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="siza-calendar-settings.json";a.click();URL.revokeObjectURL(a.href);showNotice("Settings exported.");};
-  document.getElementById("importJson").onchange=(evt)=>{const file=evt.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state={...state,...JSON.parse(String(reader.result))};setup();persist("Settings imported.");}catch(e){showNotice("Could not read that file.");}};reader.readAsText(file);};
-  renderAll();
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
+function openPane(name){document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));document.getElementById(`pane-${name}`).classList.add("active");document.querySelectorAll(".menu-item").forEach(b=>b.classList.toggle("active", b.dataset.pane===name));document.getElementById("menuPanel").classList.remove("open");}
+function setup(){loadState();const today=new Date();document.getElementById("gInput").value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;document.getElementById("hMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");document.getElementById("browseGMonth").innerHTML=MONTHS_G.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");document.getElementById("browseHMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");document.getElementById("ovMonth").innerHTML=MONTHS_H.map((m,i)=>`<option value="${i+1}">${i+1}. ${m}</option>`).join("");document.getElementById("hMonth").value=state.hMonth;document.getElementById("hYear").value=state.hYear;document.getElementById("hDay").value=state.hDay;document.getElementById("browseGYear").value=state.browseGregorianYear;document.getElementById("browseGMonth").value=state.browseGregorianMonth;document.getElementById("browseGSlider").value=state.browseGregorianYear;document.getElementById("browseHYear").value=state.browseHijriYear;document.getElementById("browseHMonth").value=state.browseHijriMonth;document.getElementById("browseHSlider").value=state.browseHijriYear;document.getElementById("ovMonth").value=10;document.getElementById("menuToggle").onclick=()=>document.getElementById("menuPanel").classList.toggle("open");document.querySelectorAll(".menu-item").forEach(btn=>btn.onclick=()=>openPane(btn.dataset.pane));document.addEventListener("click",(e)=>{ if(!document.getElementById("menuPanel").contains(e.target) && !document.getElementById("menuToggle").contains(e.target)) document.getElementById("menuPanel").classList.remove("open"); });["gInput","hMonth","hYear","hDay","eventSearch","browseGYear","browseGMonth","browseHYear","browseHMonth"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{state.hMonth=+document.getElementById("hMonth").value;state.hYear=+document.getElementById("hYear").value;state.hDay=+document.getElementById("hDay").value;state.browseGregorianYear=+document.getElementById("browseGYear").value;state.browseGregorianMonth=+document.getElementById("browseGMonth").value;state.browseHijriYear=+document.getElementById("browseHYear").value;state.browseHijriMonth=+document.getElementById("browseHMonth").value;saveState();renderAll();}));document.getElementById("modeGregorian").onclick=()=>{state.eventYearMode="gregorian";persist();};document.getElementById("modeHijri").onclick=()=>{state.eventYearMode="hijri";persist();};document.getElementById("browseGSlider").oninput=e=>{document.getElementById("browseGYear").value=e.target.value;state.browseGregorianYear=+e.target.value;persist();};document.getElementById("browseHSlider").oninput=e=>{document.getElementById("browseHYear").value=e.target.value;state.browseHijriYear=+e.target.value;persist();};document.getElementById("prevG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value-1;if(m<1){m=12;y--;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};document.getElementById("nextG").onclick=()=>{let y=+document.getElementById("browseGYear").value,m=+document.getElementById("browseGMonth").value+1;if(m>12){m=1;y++;}document.getElementById("browseGYear").value=y;document.getElementById("browseGMonth").value=m;document.getElementById("browseGSlider").value=y;state.browseGregorianYear=y;state.browseGregorianMonth=m;persist();};document.getElementById("prevH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,-1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};document.getElementById("nextH").onclick=()=>{const moved=addHijriMonths(+document.getElementById("browseHYear").value,+document.getElementById("browseHMonth").value,1);document.getElementById("browseHYear").value=moved.year;document.getElementById("browseHMonth").value=moved.month;document.getElementById("browseHSlider").value=moved.year;state.browseHijriYear=moved.year;state.browseHijriMonth=moved.month;persist();};document.getElementById("saveOverride").onclick=()=>{const entry={hYear:+document.getElementById("ovYear").value,hMonth:+document.getElementById("ovMonth").value,gDate:document.getElementById("ovDate").value};state.overrides=sortOverrides([...state.overrides.filter(o=>!(o.hYear===entry.hYear&&o.hMonth===entry.hMonth)),entry]);persist(`Saved override for 1 ${MONTHS_H[entry.hMonth-1]} ${entry.hYear} AH = ${entry.gDate}`);};document.getElementById("clearOverrides").onclick=()=>{state.overrides=[];persist("All future manual corrections were cleared.");};document.getElementById("copyLink").onclick=async()=>{const payload=encodeURIComponent(btoa(JSON.stringify(state)));await navigator.clipboard.writeText(`${location.origin}${location.pathname}#${payload}`);showNotice("Share link copied.");};document.getElementById("exportJson").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="siza-calendar-settings.json";a.click();URL.revokeObjectURL(a.href);showNotice("Settings exported.");};document.getElementById("importJson").onchange=(evt)=>{const file=evt.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state={...state,...JSON.parse(String(reader.result))};setup();persist("Settings imported.");}catch(e){showNotice("Could not read that file.");}};reader.readAsText(file);};renderAll();if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});}
 setup();
 </script>
 </body>
