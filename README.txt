@@ -1,1 +1,1 @@
-Updated v3 package
+Premium multilingual SIZA package with polished UI and translations for core languages including English, Hindi, Urdu, Arabic, and Spanish plus a multilingual selector.
