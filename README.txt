@@ -1,1 +1,1 @@
-v8 adds subtle next-event glow, next-event countdown, and light/dark theme toggle.
+Fixed v9 rebuild: working data binding, hamburger menu, event details, conversions, and iPhone horizontal calendar scrolling.
