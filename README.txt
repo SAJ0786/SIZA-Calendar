@@ -1,1 +1,1 @@
-v8 adds subtle next-event glow, next-event countdown, and light/dark theme toggle.
+Final QA rebuild. Clean package with full manifest, full service worker, fixed About text, footer, splash, event details, conversions, working hamburger menu, and iPhone-friendly calendar scrolling.

@@ -1,11 +1,11 @@
 {
   "name": "SIZA - Calendar Religiously",
   "short_name": "SIZA Calendar",
-  "description": "SIZA Calendar Religiously - Hijri ↔ Gregorian Shia Calendar",
+  "description": "SIZA Calendar Religiously - Hijri \u2194 Gregorian Shia Calendar",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f1f3f5",
-  "theme_color": "#4c5359",
+  "background_color": "#e5e7eb",
+  "theme_color": "#4a4a4a",
   "icons": [
     {
       "src": "icons/icon-192.png",
