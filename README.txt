@@ -1,1 +1,1 @@
-Premium multilingual SIZA package with polished UI and translations for core languages including English, Hindi, Urdu, Arabic, and Spanish plus a multilingual selector.
+v8 adds subtle next-event glow, next-event countdown, and light/dark theme toggle.
