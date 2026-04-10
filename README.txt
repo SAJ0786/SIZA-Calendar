@@ -1,1 +1,1 @@
-Fixed v9 rebuild: working data binding, hamburger menu, event details, conversions, and iPhone horizontal calendar scrolling.
+v11 adds footer branding, splash screen overlay, and fixes next key event panel text colors to follow event theme.
