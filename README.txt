@@ -1,1 +1,1 @@
-v11 adds footer branding, splash screen overlay, and fixes next key event panel text colors to follow event theme.
+v8 adds subtle next-event glow, next-event countdown, and light/dark theme toggle.
